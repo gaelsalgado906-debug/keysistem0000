@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Key Interface</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        /* Animación moderna, ultra smooth y lenta (1.2 segundos con un bezier personalizado) */
+        @keyframes smoothFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.97);
+                filter: blur(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+        .animate-smooth-slow {
+            animation: smoothFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 flex items-center justify-center min-h-screen p-4 overflow-hidden antialiased">
+
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(59,130,246,0.08),transparent_50%)] pointer-events-none"></div>
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(139,92,246,0.08),transparent_50%)] pointer-events-none"></div>
+
+    <div class="animate-smooth-slow w-full max-w-md bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-2xl shadow-blue-950/20 z-10 space-y-6">
+        
+        <div class="text-center space-y-2">
+            <div class="inline-flex p-3 bg-blue-500/10 rounded-full text-blue-400 mb-2 border border-blue-500/20">
+                <i data-lucide="key-round" class="w-6 h-6"></i>
+            </div>
+            <h1 class="text-2xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
+                Get Key
+            </h1>
+            <p class="text-sm text-slate-400">
+                Tu llave de acceso está lista. Cópiala para continuar.
+            </p>
+        </div>
+
+        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-4 flex items-center justify-between gap-4 group transition-all duration-300 hover:border-slate-700">
+            <div class="flex items-center gap-3 min-w-0">
+                <i data-lucide="shield-check" class="w-4 h-4 text-blue-500 shrink-0"></i>
+                <span id="key-text" class="font-mono text-sm tracking-wider text-blue-400 font-semibold truncate select-all">
+                    kl76009999
+                </span>
+            </div>
+            
+            <button id="copy-btn" class="relative flex items-center justify-center p-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 hover:border-slate-700 text-slate-400 hover:text-white transition-all duration-300 cursor-pointer shrink-0 active:scale-95" title="Copiar clave">
+                <i id="copy-icon" data-lucide="copy" class="w-4 h-4 transition-all duration-300"></i>
+                <i id="check-icon" data-lucide="check" class="w-4 h-4 text-emerald-400 absolute opacity-0 scale-75 transition-all duration-300"></i>
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // Inicializar los iconos de Lucide
+        lucide.createIcons();
+
+        // Lógica interactiva para copiar la clave
+        const copyBtn = document.getElementById('copy-btn');
+        const keyText = document.getElementById('key-text').innerText;
+        const copyIcon = document.getElementById('copy-icon');
+        const checkIcon = document.getElementById('check-icon');
+
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(keyText.trim());
+                
+                // Transición fluida al estado de "Copiado"
+                copyIcon.classList.add('opacity-0', 'scale-75');
+                checkIcon.classList.remove('opacity-0', 'scale-75');
+                checkIcon.classList.add('opacity-100', 'scale-100');
+                copyBtn.classList.add('border-emerald-500/30', 'bg-emerald-950/20');
+
+                // Regresar al estado original tras 2 segundos
+                setTimeout(() => {
+                    copyIcon.classList.remove('opacity-0', 'scale-75');
+                    checkIcon.classList.add('opacity-0', 'scale-75');
+                    checkIcon.classList.remove('opacity-100', 'scale-100');
+                    copyBtn.classList.remove('border-emerald-500/30', 'bg-emerald-950/20');
+                }, 2000);
+            } catch (err) {
+                console.error('Error al copiar al portapapeles: ', err);
+            }
+        });
+    </script>
+</body>
+</html>
